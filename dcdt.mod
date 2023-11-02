@@ -1,0 +1,71 @@
+: Provides an example of how to manage variable capacitance using
+: the relation q = c*v so that i = (c*dv/dt) + (dc/dt * v)
+: The capacitance is assumed to be c(t)
+: The effect of changing capacitance on the (c*dv/dt) term is accomplished
+: via a POINTER to the compartment cm (set up in hoc) where the c pointer
+: is assigned a value in the BEFORE BREAKPOINT block.  The effect of
+: the (dc/dt * v) term is accomplished in the BREAKPOINT block.
+
+UNITS {
+  (mA) = (milliamp)
+  (mV) = (millivolt)
+  (uF) = (microfarad)
+  PI = (pi) (1)
+}
+
+NEURON {
+  SUFFIX dcdt
+  THREADSAFE
+  RANGE c1, c2, w, tbegin, tdur, dc
+  POINTER c
+  NONSPECIFIC_CURRENT i
+}
+ 
+PARAMETER {
+  c1 = 1 (uF/cm2)
+  c2 = 0 (uF/cm2)
+  w = 0 (/ms)
+  tbegin = 1e9 (ms) 
+  tdur = 0 (ms)
+  dc (uF/cm2-ms)
+}
+ 
+ASSIGNED {
+  c (uF/cm2)
+  i (mA/cm2)
+  v (mV)
+  dt (ms)
+}
+ 
+FUNCTION cm(t(ms)) (uF/cm2) {
+  if (t >= tbegin && t <= (tbegin + tdur)) {
+    cm = c1 + c2*sin(2*PI*w*(t - tbegin))
+  }else{
+    cm = c1
+  }
+}
+        
+FUNCTION dcmdt(t(ms))(uF/cm2-ms) {
+  if (t >= tbegin && t <= (tbegin + tdur)) {
+    
+    dcmdt = c2*(sin(2*PI*w*(t-tbegin + dt)) - sin(2*PI*w* ( t - tbegin)) ) / dt 
+  }else{
+    dcmdt = 0
+  }
+}
+
+INITIAL {
+  dc = 0
+}
+
+BEFORE BREAKPOINT {
+  c = cm(t)
+  dc = dcmdt(t)
+}
+
+BREAKPOINT {
+  at_time(tbegin)
+  at_time(tbegin + tdur)
+  
+  i = dc*v*(0.001)
+}

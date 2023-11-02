@@ -1,0 +1,25 @@
+
+./dcdt.c: ../dcdt.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd ".."; MODLUNIT=$(NRNUNITS) $(NOCMODL) dcdt.mod -o "/home/mithun/Documents/Work/DUK/CAN_Lab/positions/DST_CSRI_PDF/project/03_standalone_BLS_NEURON_model_python/03f_Cmdrive_NEURON/src/Collab_wth_Hines/My_attempts/RS_Cmdrive_mod_working/x86_64")
+
+./dcdt.o: ./dcdt.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I".." $(INCLUDES) -fPIC -c $< -o $@
+
+./HH_traub.c: ../HH_traub.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd ".."; MODLUNIT=$(NRNUNITS) $(NOCMODL) HH_traub.mod -o "/home/mithun/Documents/Work/DUK/CAN_Lab/positions/DST_CSRI_PDF/project/03_standalone_BLS_NEURON_model_python/03f_Cmdrive_NEURON/src/Collab_wth_Hines/My_attempts/RS_Cmdrive_mod_working/x86_64")
+
+./HH_traub.o: ./HH_traub.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I".." $(INCLUDES) -fPIC -c $< -o $@
+
+./IM_cortex.c: ../IM_cortex.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd ".."; MODLUNIT=$(NRNUNITS) $(NOCMODL) IM_cortex.mod -o "/home/mithun/Documents/Work/DUK/CAN_Lab/positions/DST_CSRI_PDF/project/03_standalone_BLS_NEURON_model_python/03f_Cmdrive_NEURON/src/Collab_wth_Hines/My_attempts/RS_Cmdrive_mod_working/x86_64")
+
+./IM_cortex.o: ./IM_cortex.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I".." $(INCLUDES) -fPIC -c $< -o $@
+
